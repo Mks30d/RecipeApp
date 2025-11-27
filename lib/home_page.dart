@@ -5,6 +5,14 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Recipe App'),
+        centerTitle: true,
+      ),
+      body: const Center(
+        child: Text('Welcome to the Recipe App!'),
+      ),
+    );
   }
 }
