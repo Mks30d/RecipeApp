@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/views/home_screen.dart';
 import 'package:recipe_app/utils/constants.dart';
+import 'package:recipe_app/widgets/save_details.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -19,7 +20,8 @@ class _MainPageState extends State<MainPage> {
       HomeScreen(),
       navBarPage(Icons.favorite),
       navBarPage(Icons.calendar_month),
-      navBarPage(Icons.settings),
+      // navBarPage(Icons.settings),
+      SaveDetails(),
     ];
     super.initState();
   }

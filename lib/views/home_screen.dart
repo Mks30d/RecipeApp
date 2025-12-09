@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:recipe_app/widgets/food_items_display.dart';
 import 'package:recipe_app/widgets/my_icon_button.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,6 +16,18 @@ class _HomeScreenState extends State<HomeScreen> {
   final CollectionReference categories = FirebaseFirestore.instance.collection(
     "Category",
   );
+
+  Query get filteredRecipes {
+    return FirebaseFirestore.instance
+        .collection('Recipes')
+        .where('category', isEqualTo: category);
+  }
+
+  Query get allRecipes {
+    return FirebaseFirestore.instance.collection("recipes");
+  }
+
+  Query get selectedRecipes => category == "All" ? allRecipes : filteredRecipes;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +61,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 TextButton(onPressed: () {}, child: Text("View all")),
               ],
+            ),
+
+            SizedBox(height: 15),
+
+            StreamBuilder(
+              stream: selectedRecipes.snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                if (snapshot.hasData) {
+                  final List<DocumentSnapshot> recipes =
+                      snapshot.data?.docs ?? [];
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: recipes.map((e) {
+                          return FoodItemsDisplay(documentSnapshot: e);
+                        }).toList(),
+                      ),
+                    ),
+                  );
+                }
+
+                return Center(child: CircularProgressIndicator());
+              },
             ),
           ],
         ),
