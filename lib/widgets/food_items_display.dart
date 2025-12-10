@@ -15,14 +15,56 @@ class FoodItemsDisplay extends StatelessWidget {
         width: 230,
         child: Stack(
           children: [
-            Container(
-              width: double.infinity,
-              height: 160,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                image: DecorationImage(
-                  image: NetworkImage(documentSnapshot['imageUrl']),
-                  fit: BoxFit.cover,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    image: DecorationImage(
+                      image: NetworkImage(documentSnapshot['imageUrl']),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 10),
+
+                Text(
+                  documentSnapshot["name"],
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+
+                SizedBox(height: 5),
+
+                Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.grey, size: 16),
+                    SizedBox(width: 5),
+                    Text(
+                      documentSnapshot["rating"].toString(),
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            // for favorite icon
+            Positioned(
+              right: 10,
+              top: 10,
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.white,
+                child: Center(
+                  child: Icon(
+                    Icons.favorite_border,
+                    size: 25,
+                    color: Colors.red,
+                  ),
                 ),
               ),
             ),

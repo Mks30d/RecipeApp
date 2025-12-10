@@ -11,15 +11,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final category = "All";
+  String category = "All";
 
-  final CollectionReference categories = FirebaseFirestore.instance.collection(
-    "Category",
-  );
+  final CollectionReference categoryCollection = FirebaseFirestore.instance
+      .collection("Category");
 
   Query get filteredRecipes {
     return FirebaseFirestore.instance
-        .collection('Recipes')
+        .collection('recipes')
         .where('category', isEqualTo: category);
   }
 
@@ -65,17 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
             SizedBox(height: 15),
 
+            // for food items display
             StreamBuilder(
               stream: selectedRecipes.snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-
+                // if data is available
                 if (snapshot.hasData) {
                   final List<DocumentSnapshot> recipes =
                       snapshot.data?.docs ?? [];
@@ -93,6 +86,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
 
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
                 return Center(child: CircularProgressIndicator());
               },
             ),
@@ -104,8 +105,55 @@ class _HomeScreenState extends State<HomeScreen> {
 
   StreamBuilder<QuerySnapshot<Object?>> selectedCategory() {
     return StreamBuilder(
-      stream: categories.snapshots(),
-      builder: (context, snapshot) {
+      stream: categoryCollection.snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
+        // if data is available
+        if (snapshot.hasData) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: List.generate(snapshot.data!.docs.length, (index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      category = snapshot.data!.docs[index]['name'];
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 5,
+                      horizontal: 15,
+                    ),
+                    margin: const EdgeInsets.only(right: 15),
+                    decoration: BoxDecoration(
+                      color: category == snapshot.data!.docs[index]['name']
+                          ? Colors.blue
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withValues(alpha: 0.2),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      snapshot.data!.docs[index]['name'],
+                      style: TextStyle(
+                        color: category == snapshot.data!.docs[index]['name']
+                            ? Colors.white
+                            : Colors.grey.shade600,
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          );
+        }
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         }
@@ -114,49 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return Text('Error: ${snapshot.error}');
         }
 
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: List.generate(snapshot.data!.docs.length, (index) {
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    category == snapshot.data!.docs[index]['name'];
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 15,
-                  ),
-                  margin: const EdgeInsets.only(right: 15),
-                  decoration: BoxDecoration(
-                    color: category == snapshot.data!.docs[index]['name']
-                        ? Colors.blue
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    snapshot.data!.docs[index]['name'],
-                    style: TextStyle(
-                      color: category == snapshot.data!.docs[index]['name']
-                          ? Colors.white
-                          : Colors.grey.shade600,
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ),
-        );
+        return Center(child: CircularProgressIndicator());
       },
     );
   }
