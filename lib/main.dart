@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:recipe_app/provider/favorite_provider.dart';
 import 'package:recipe_app/views/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -14,13 +16,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Recipe App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => FavoriteProvider())],
+      child: MaterialApp(
+        title: 'Recipe App',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        debugShowCheckedModeBanner: false,
+        home: MainPage(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: MainPage(),
     );
   }
 }
