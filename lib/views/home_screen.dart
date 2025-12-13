@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:recipe_app/views/view_all_items.dart';
 import 'package:recipe_app/widgets/food_items_display.dart';
 import 'package:recipe_app/widgets/my_icon_button.dart';
 
@@ -58,7 +59,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
 
-                TextButton(onPressed: () {}, child: Text("View all")),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewAllItems()),
+                    );
+                  },
+                  child: Text("View all"),
+                ),
               ],
             ),
 
@@ -79,7 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: recipes.map((e) {
-                          return FoodItemsDisplay(documentSnapshot: e);
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            child: FoodItemsDisplay(documentSnapshot: e),
+                          );
                         }).toList(),
                       ),
                     ),

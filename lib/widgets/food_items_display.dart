@@ -11,7 +11,7 @@ class FoodItemsDisplay extends StatelessWidget {
       onTap: () {},
 
       child: Container(
-        margin: const EdgeInsets.only(right: 10),
+        margin: const EdgeInsets.only(right: 0),
         width: 230,
         child: Stack(
           children: [
