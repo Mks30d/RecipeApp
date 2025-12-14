@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/views/favorite_screen.dart';
 import 'package:recipe_app/views/home_screen.dart';
 import 'package:recipe_app/utils/constants.dart';
 import 'package:recipe_app/widgets/save_details.dart';
@@ -18,9 +19,8 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     pages = [
       HomeScreen(),
-      navBarPage(Icons.favorite),
+      const FavoriteScreen(),
       navBarPage(Icons.calendar_month),
-      // navBarPage(Icons.settings),
       SaveDetails(),
     ];
     super.initState();
