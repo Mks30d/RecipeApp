@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/provider/favorite_provider.dart';
+import 'package:recipe_app/views/recipe_detail_screen.dart';
 
 class FoodItemsDisplay extends StatelessWidget {
   final DocumentSnapshot<Object?> documentSnapshot;
@@ -10,7 +11,15 @@ class FoodItemsDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = FavoriteProvider.of(context);
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                RecipeDetailScreen(docSanpshot: documentSnapshot),
+          ),
+        );
+      },
 
       child: Container(
         margin: const EdgeInsets.only(right: 0),
@@ -20,14 +29,17 @@ class FoodItemsDisplay extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: double.infinity,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    image: DecorationImage(
-                      image: NetworkImage(documentSnapshot['imageUrl']),
-                      fit: BoxFit.cover,
+                Hero(
+                  tag: documentSnapshot['imageUrl'],
+                  child: Container(
+                    width: double.infinity,
+                    height: 160,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      image: DecorationImage(
+                        image: NetworkImage(documentSnapshot['imageUrl']),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
