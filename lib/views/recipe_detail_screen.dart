@@ -97,43 +97,29 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.docSanpshot['name'],
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-                  ),
-                  Text(
-                    "${widget.docSanpshot['calories']} cal",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "⭐ ${widget.docSanpshot['rating']}/5 (200+ reviews)",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 20),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
+                  // for name and calories
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Ingredients",
+                        widget.docSanpshot['name'],
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 24,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
-                        "How many servings?",
+                        "${widget.docSanpshot['calories']} cal",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        "⭐ ${widget.docSanpshot['rating']}/5 (200+ reviews)",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey.shade600,
@@ -142,14 +128,44 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     ],
                   ),
 
-                  Spacer(),
+                  SizedBox(height: 20),
 
-                  // for quantity increment decrement widget
-                  QuantityIncrementDecrement(
-                    currNumber: quantityProvider.currentNumber,
-                    onIncrement: () => quantityProvider.increaseQuantity(),
-                    onDecrement: () => quantityProvider.decreaseQuantity(),
+                  // for ingredients and quantity selector
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Ingredients",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            "How many servings?",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      Spacer(),
+
+                      // for quantity increment decrement widget
+                      QuantityIncrementDecrement(
+                        currNumber: quantityProvider.currentNumber,
+                        onIncrement: () => quantityProvider.increaseQuantity(),
+                        onDecrement: () => quantityProvider.decreaseQuantity(),
+                      ),
+                    ],
                   ),
+
+                  // list of ingredients
+                  SizedBox(height: 70),
                 ],
               ),
             ),
