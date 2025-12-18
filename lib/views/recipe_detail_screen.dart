@@ -16,9 +16,30 @@ class RecipeDetailScreen extends StatefulWidget {
 
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   @override
+  void initState() {
+    // initialize base amounts in the provider
+    List<double> baseAmounts = widget.docSanpshot['ingredientsAmount']
+        .map<double>((amount) => double.parse(amount.toString()))
+        .toList();
+
+    Provider.of<QuantityProvider>(
+      context,
+      listen: false,
+    ).setBaseIngredientAmounts(baseAmounts);
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final provider = FavoriteProvider.of(context);
     final quantityProvider = Provider.of<QuantityProvider>(context);
+
+    final List ingredientsImage =
+        widget.docSanpshot['ingredientsImage'] as List<dynamic>;
+    final List ingredients = widget.docSanpshot['ingredients'] as List<dynamic>;
+
+    // final List ingredientsAmount = widget.docSanpshot['ingredientsAmount'] as List<dynamic>;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -165,6 +186,56 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   ),
 
                   // list of ingredients
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: ingredients.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // ingredient image
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: NetworkImage(ingredientsImage[index]),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: 15),
+
+                            // ingredient name
+                            Expanded(
+                              child: Text(
+                                ingredients[index],
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+
+                            // ingredient amount
+                            Text(
+                              "${quantityProvider.updateIngredientAmounts[index]} g",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+
                   SizedBox(height: 70),
                 ],
               ),
